@@ -1,4 +1,8 @@
+'use client';
+
 import { getBrands } from '@/lib/actions/brand.actions';
+import { Brand } from '@prisma/client';
+import { useEffect, useState } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -8,10 +12,20 @@ import {
 } from '../ui/carousel';
 import BrandCard from './ClientCard';
 
-const BrandList = async () => {
-  const brands = await getBrands();
+const BrandList = () => {
+  const [brands, setBrands] = useState<Brand[]>([]);
 
-  if (brands?.length === 0) return;
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const brands = await getBrands();
+        setBrands(brands || []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBrands();
+  }, []);
 
   return (
     <section className="container my-6">
