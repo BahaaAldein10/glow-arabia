@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    environment:
+      - MONGO_USERNAME: user
+      - MONGO_PASSWORD: pass
+      - MONGO_DB: db
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build: .
+    container_name: nextjs_app
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
